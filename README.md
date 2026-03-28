@@ -107,7 +107,10 @@ wwtp-soft-sensor-etl/
 │
 ├── output/                                 Resultados del pipeline
 │   ├── data_statistics.csv                 Estadísticas descriptivas
-│   └── pipeline_metadata.json              Metadatos con trazabilidad
+│   ├── pipeline_metadata.json              Metadatos con trazabilidad
+│   ├── series_temporales.png               Grafico de series temporales
+│   ├── distribuciones.png.                 grafico de distribuciones
+│   └── correlacion.png                     Matriz de correlacion
 │
 ├── docs/                                   Documentación académica
 │   ├── Entregable_2.pdf                   Problema, Indagación y Datos
@@ -196,6 +199,8 @@ Las pruebas validan: existencia del archivo, dimensiones, eliminación de Basin 
 ---
 
 ### 5.2 Ejecución desde Google Colab
+
+Colab tiene todo el código inline con visualizaciones (series temporales, histogramas, correlación) — es la versión interactiva para presentación.   
 
 El notebook `ETL_Pipeline_WWTP_Soft_Sensor.ipynb` es **autocontenido** — no requiere la estructura de carpetas del repositorio ni el archivo `run.py`. Incluye todo el código, las visualizaciones y la carga de archivos.
 

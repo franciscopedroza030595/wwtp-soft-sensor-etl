@@ -1,0 +1,86 @@
+# =============================================================================
+# Configuración del Pipeline ETL - Soft Sensor WWTP
+# =============================================================================
+
+project:
+  name: "wwtp-soft-sensor-etl"
+  description: "Pipeline ETL para preparación de datos SCADA del proceso de aireación"
+  version: "1.0.0"
+
+paths:
+  raw_data: "data/raw/AmmoniaModelDataWitB1C7AmmoniumHuman.csv"
+  processed_data: "data/processed/wwtp_aeration_processed.csv"
+  compressed_data: "data/processed/wwtp_aeration_processed.csv.gz"
+  statistics: "output/data_statistics.csv"
+  metadata: "output/pipeline_metadata.json"
+
+extraction:
+  file_format: "csv"
+  datetime_column: "DateTime"
+  datetime_format: "mixed"
+
+column_rename:
+  DateTime: "timestamp"
+  Air Header 2 Pressure: "air_header_pressure_psi"
+  Air Header 1 Temperature: "air_header_temp_f"
+  Flow Distribution Structure Ammonium: "influent_ammonium_mg_l"
+  Aeration Basin 1 Cell 5 D O: "do_basin1_mg_l"
+  Aeration Basin 2 Cell 5 D O: "do_basin2_mg_l"
+  Aeration Basin 3 Cell 5 D O: "do_basin3_mg_l"
+  Aeration Basin 4 Cell 5 D O: "do_basin4_mg_l"
+  Aeration Basin 5 Cell 5 D O: "do_basin5_mg_l"
+  Aeration Basin 6 Cell 5 D O: "do_basin6_mg_l"
+  Aeration Basin 1 Airflow to Cells 1-6: "airflow_basin1_cells1_6_scfm"
+  Aeration Basin 1 Air Flow to Cells 7-10: "airflow_basin1_cells7_10_scfm"
+  Aeration Basin 2 Airflow to Cells 1-6: "airflow_basin2_cells1_6_scfm"
+  Aeration Basin 2 Air Flow to Cells 7-10: "airflow_basin2_cells7_10_scfm"
+  Aeration Basin 3 Airflow to Cells 1-6: "airflow_basin3_cells1_6_scfm"
+  Aeration Basin 3 Air Flow to Cells 7-10: "airflow_basin3_cells7_10_scfm"
+  Aeration Basin 4 Airflow to Cells 1-6: "airflow_basin4_cells1_6_scfm"
+  Aeration Basin 4 Air Flow to Cells 7-10: "airflow_basin4_cells7_10_scfm"
+  Aeration Basin 5 Airflow to Cells 1-6: "airflow_basin5_cells1_6_scfm"
+  Aeration Basin 5 Cells 7-10 Airflow: "airflow_basin5_cells7_10_scfm"
+  Aeration Basin 6 Airflow to Cells 1-6: "airflow_basin6_cells1_6_scfm"
+  Aeration Basin 6 Cells 7-10 Airflow: "airflow_basin6_cells7_10_scfm"
+  Sum of F30402 and F30403, with addition of RAS Flow to Basins: "total_influent_flow_mgd"
+  Total Ras Flow: "total_ras_flow_gpm"
+  Total MLR Flow: "total_mlr_flow_mgd"
+  Aeration Effluent Channel Ammonium: "effluent_ammonium_mg_l"
+  Aeration Effluent Channel Phosphate: "effluent_phosphate_mg_l"
+  Aeration Effluent Channel Suspended Solids: "effluent_ss"
+  Aeration Basin Effluent Channel Temp: "effluent_temp_c"
+  Aeration Basin Eff Channel pH: "effluent_ph"
+  Aeration Basin 1 Cell 7 Ammonium: "basin1_cell7_ammonium_mg_l"
+
+valid_ranges:
+  air_header_pressure_psi: [2.0, 15.0]
+  air_header_temp_f: [50.0, 300.0]
+  influent_ammonium_mg_l: [0.0, 200.0]
+  do_basin1_mg_l: [0.0, 15.0]
+  do_basin2_mg_l: [0.0, 15.0]
+  do_basin3_mg_l: [0.0, 15.0]
+  do_basin4_mg_l: [0.0, 15.0]
+  do_basin5_mg_l: [0.0, 15.0]
+  effluent_ammonium_mg_l: [0.0, 50.0]
+  effluent_phosphate_mg_l: [0.0, 20.0]
+  effluent_temp_c: [0.0, 40.0]
+  effluent_ph: [4.0, 10.0]
+  basin1_cell7_ammonium_mg_l: [0.0, 50.0]
+  total_ras_flow_gpm: [0.0, 15000.0]
+  total_mlr_flow_mgd: [0.0, 100.0]
+  total_influent_flow_mgd: [0.0, 100.0]
+
+transformation:
+  interpolation_method: "linear"
+  interpolation_limit: 6
+  columns_to_drop:
+    - "do_basin6_mg_l"
+
+features:
+  rolling_window: 12
+  rolling_min_periods: 6
+  key_variables:
+    - "effluent_ammonium_mg_l"
+    - "do_avg_mg_l"
+    - "effluent_ph"
+    - "effluent_ss"

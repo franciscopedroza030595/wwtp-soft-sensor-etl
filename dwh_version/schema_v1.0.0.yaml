@@ -1,0 +1,15 @@
+# Esquema del Dataset Procesado - v1.0.0
+version: "1.0.0"
+last_updated: "2026-03-27"
+description: "Dataset WWTP aireación procesado por pipeline ETL"
+schema:
+  format: "CSV / CSV.GZ"
+  encoding: "UTF-8"
+  total_columns: 54
+  total_rows: "~105,397"
+  frequency: "5 minutos"
+  period: "Nov 2023 — Nov 2024"
+changelog:
+  - version: "1.0.0"
+    date: "2026-03-27"
+    changes: "Versión inicial del esquema"
